@@ -41,7 +41,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:3001', // Point to HTTPS backend
+        target: 'https://nextbi-backend:3001', // Point to HTTPS backend
         changeOrigin: true,
       },
     },
