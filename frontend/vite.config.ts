@@ -25,25 +25,44 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import fs from 'fs';
 
-// [https://vitejs.dev/config/](https://vitejs.dev/config/)
 export default defineConfig({
   plugins: [react()],
+
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+
   server: {
     host: '0.0.0.0',
     port: 3000,
+
     https: {
       key: fs.readFileSync('key.pem'),
       cert: fs.readFileSync('cert.pem'),
     },
+
+    // Allow external domains to access the Vite dev server
+    allowedHosts: [
+      'nextbi.dynprocloud.com',
+      '35.174.81.186'
+    ],
+
+    // Proxy setup with two different backend targets
     proxy: {
+      // Backend #1 (IP-based)
       '/api': {
-        target: 'https://localhost:3001', // Point to HTTPS backend
+        target: 'http://35.174.81.186:3001',
         changeOrigin: true,
+        secure: false,
+      },
+
+      // Backend #2 (domain-based)
+      '/auth': {
+        target: 'https://nextbi.dynprocloud.com:3001',
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
